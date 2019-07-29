@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Preference>
+    <tab
+            id="@+id/tab_android"
+            title="安卓"
+            activeColor="#000"
+            inActiveColor="#BEBEBE"
+            icon="@drawable/ic_android"
+    />
+    <tab
+            id="@+id/tab_ios"
+            title="苹果"
+            activeColor="#000"
+            inActiveColor="#BEBEBE"
+            icon="@drawable/ic_ios"
+    />
+    <tab
+            id="@+id/tab_welfare"
+            title="福利"
+            activeColor="#000"
+            inActiveColor="#BEBEBE"
+            icon="@drawable/ic_welfare"
+    />
+</Preference>
