@@ -70,7 +70,7 @@ class BaseAdapter: RecyclerView.Adapter<BaseAdapter.RecyclerHolder>() {
     override fun onBindViewHolder(holder: RecyclerHolder, position: Int) {
         if (position == list.size)
             return
-        var data = list[position]
+        val data = list[position]
         if (data.type=="\u798f\u5229"){
             Glide.with(holder.itemView).load(data.url).into(holder.img)
         }else{

@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/list_item"
+        xmlns:tools="http://schemas.android.com/tools" android:id="@+id/list_item"
         android:orientation="vertical"
         android:padding="5dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-    <androidx.cardview.widget.CardView android:layout_width="match_parent"
-                                       android:layout_height="wrap_content"
-                                       android:padding="20dp"
-                                       app:cardCornerRadius="10dp"
-    >
+    <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="20dp"
+            app:cardCornerRadius="10dp">
         <LinearLayout
                 android:background="?android:attr/selectableItemBackground"
                 android:orientation="vertical"
@@ -29,11 +29,12 @@
                         android:textSize="20sp"/>
 
                 <ImageView
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="550dp"
                         android:id="@+id/img"
                         android:layout_margin="10dp"
-                        android:textSize="20sp"/>
+                        android:textSize="20sp"
+                        tools:ignore="ContentDescription"/>
 
             </RelativeLayout>
 
@@ -53,7 +54,9 @@
                         android:id="@+id/who"
                         android:layout_alignParentRight="true"
                         android:layout_margin="10dp"
-                        android:textSize="15sp"/>
+                        android:textSize="15sp"
+                        tools:ignore="RelativeOverlap"
+                        android:layout_alignParentEnd="true"/>
             </RelativeLayout>
         </LinearLayout>
     </androidx.cardview.widget.CardView>

@@ -50,7 +50,7 @@ open class BaseFragment(var type: String) : Fragment() {
         })
         adapter.setOnItemClickListener(object :BaseAdapter.OnItemClickListener{
             override fun onItemClick(list: List<AndroidResult.ResultsBean>, position: Int) {
-                var intent = Intent(context,DisplayActivity::class.java)
+                val intent = Intent(context,DisplayActivity::class.java)
                 intent.putExtra("url",list[position].url)
                 startActivity(intent)
             }
@@ -71,7 +71,7 @@ open class BaseFragment(var type: String) : Fragment() {
                 swipeRefreshLayout.isRefreshing = false
                 ThreadUtil.runOnMainThread(object : Runnable {
                     override fun run() {
-                        adapter.updateList(androidResult.results)
+                        androidResult.results?.let { adapter.updateList(it) }
                         //Toast.makeText(context,"获取数据成功",Toast.LENGTH_SHRORT).show()
                     }
                 })
@@ -99,7 +99,7 @@ open class BaseFragment(var type: String) : Fragment() {
                 val gson = Gson()
                 val androidResult = gson.fromJson<AndroidResult>(result, object : TypeToken<AndroidResult>() {}.type)
                 ThreadUtil.runOnMainThread(Runnable {
-                    adapter.loadMore(androidResult.results)
+                    androidResult.results?.let { adapter.loadMore(it) }
                     //Toast.makeText(context,"加载数据成功",Toast.LENGTH_LONG).show()
                 })
             }
