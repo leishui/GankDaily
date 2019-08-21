@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Gank Daily</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">这里准备做搜索历史</string>
+    <string name="up_to_date">最新</string>
+    <string name="random">随机</string>
 </resources>

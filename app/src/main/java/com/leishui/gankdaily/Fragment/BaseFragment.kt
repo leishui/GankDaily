@@ -1,11 +1,15 @@
 package com.leishui.gankdaily.Fragment
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.view.isGone
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -19,79 +23,106 @@ import com.leishui.gankdaily.ResultBean.AndroidResult
 import com.leishui.gankdaily.Util.ThreadUtil
 import com.leishui.gankdaily.Util.UrlUtil
 import kotlinx.android.synthetic.main.fragment.*
+import kotlinx.android.synthetic.main.load_more.*
 import okhttp3.*
 import java.io.IOException
 
-open class BaseFragment(var type: String) : Fragment() {
+open class BaseFragment(var type: String, var isNew: Boolean) : Fragment() {
     var page = 1
+    val num = 10
+    open var query = ""
     val adapter by lazy { BaseAdapter() }
     val swipeRefreshLayout: SwipeRefreshLayout by lazy { swiperefresh }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment,container,false)
+        return inflater.inflate(R.layout.fragment, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         recyclerview.layoutManager = LinearLayoutManager(context)
         recyclerview.adapter = adapter
-        initData(type)
-        swipeRefreshLayout.setOnRefreshListener { initData(type) }
-        recyclerview.addOnScrollListener(object :RecyclerView.OnScrollListener(){
+        initData(query)
+        swipeRefreshLayout.setOnRefreshListener { initData(query) }
+        recyclerview.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                if (newState == RecyclerView.SCROLL_STATE_IDLE){
-                    val layoutManager = recyclerView.layoutManager
-                    if (layoutManager is LinearLayoutManager){
-                        val manager = layoutManager
-                        val lastPosition = manager.findLastVisibleItemPosition()
-                        if (lastPosition == adapter.itemCount-1)
-                            loadMore(10)
-                    }
+                //if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                val layoutManager = recyclerView.layoutManager
+                if (layoutManager is LinearLayoutManager) {
+                    val manager = layoutManager
+                    val lastPosition = manager.findLastVisibleItemPosition()
+                    if (lastPosition == adapter.itemCount - 1)
+                        loadMore(query)
                 }
+                //}
             }
         })
-        adapter.setOnItemClickListener(object :BaseAdapter.OnItemClickListener{
+        //item点击事件
+        adapter.setOnItemClickListener(object : BaseAdapter.OnItemClickListener {
             override fun onItemClick(list: List<AndroidResult.ResultsBean>, position: Int) {
-                val intent = Intent(context,DisplayActivity::class.java)
-                intent.putExtra("url",list[position].url)
+                val intent = Intent(context, DisplayActivity::class.java)
+                val listOfPosition = list[position]
+                intent.putExtra("url", listOfPosition.url)
+                intent.putExtra(
+                    "title",
+                    if (listOfPosition.desc?.length!! > 40) listOfPosition.desc?.substring(
+                        0,
+                        40
+                    ) else listOfPosition.desc
+                )
                 startActivity(intent)
+            }
+        })
+        //item长按事件
+        adapter.setOnItemLongClickListener(object : BaseAdapter.OnItemLongClickListener {
+            override fun onItemLongClick(list: List<AndroidResult.ResultsBean>, position: Int) {
+                Toast.makeText(context, "复制链接成功", Toast.LENGTH_SHORT).show()
+                val cm = context?.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                val mClipData = ClipData.newPlainText("Label", list[position].url)
+                cm.setPrimaryClip(mClipData)
             }
 
         })
     }
 
     //初始数据
-    private fun initData(type:String) {
+    fun initData(query: String) {
         val client = OkHttpClient()
-        val url = UrlUtil.getPath(type,10,1)
+        val url = UrlUtil.getPath(type, isNew, num, 1, query)
         val request = Request.Builder().url(url).get().build()
         client.newCall(request).enqueue(object : Callback {
             override fun onResponse(call: Call, response: Response) {
                 val result = response.body?.string()
                 val gson = Gson()
-                val androidResult = gson.fromJson<AndroidResult>(result, object : TypeToken<AndroidResult>() {}.type)
-                swipeRefreshLayout.isRefreshing = false
-                ThreadUtil.runOnMainThread(object : Runnable {
-                    override fun run() {
-                        androidResult.results?.let { adapter.updateList(it) }
-                        //Toast.makeText(context,"获取数据成功",Toast.LENGTH_SHRORT).show()
-                    }
+                val searchResult = gson.fromJson<AndroidResult>(result, object : TypeToken<AndroidResult>() {}.type)
+                ThreadUtil.runOnMainThread(Runnable {
+                    //searchResult.results?.let { adapter.updateList(it) }
+                    recyclerview.scrollToPosition(0)
+                    searchResult.results?.let { adapter.updateList(it) }
+                    if (searchResult.count != num && searchResult.count != null) {
+                        more_progressbar?.isGone = true
+                        if (searchResult.count == 0)
+                            Toast.makeText(context, "无结果", Toast.LENGTH_SHORT).show()
+                        else
+                            Toast.makeText(context, "获取数据成功", Toast.LENGTH_SHORT).show()
+                        //Toast.makeText(context, "已加载全部结果", Toast.LENGTH_SHORT).show()
+                    } else
+                        Toast.makeText(context, "获取数据成功", Toast.LENGTH_SHORT).show()
                 })
+                swipeRefreshLayout.isRefreshing = false
             }
 
             override fun onFailure(call: Call, e: IOException) {
                 swiperefresh?.isRefreshing = false
-                ThreadUtil.runOnMainThread(object :Runnable{
-                    override fun run() {
-                        Toast.makeText(context,"获取数据失败:网络连接失败\n$e",Toast.LENGTH_SHORT).show()
-                    }
+                ThreadUtil.runOnMainThread(Runnable {
+                    Toast.makeText(context, "获取数据失败:网络连接失败\n$e", Toast.LENGTH_SHORT).show()
                 })
             }
         })
     }
 
     //加载更多
-    private fun loadMore(num:Int){
+    private fun loadMore(query: String) {
         val client = OkHttpClient()
-        val url = UrlUtil.getPath(type,num,page++)
+        val url = UrlUtil.getPath(type, isNew, num, ++page, query)
         val request = Request.Builder().url(url).get().build()
         client.newCall(request).enqueue(object : Callback {
             override fun onResponse(call: Call, response: Response) {
@@ -99,13 +130,19 @@ open class BaseFragment(var type: String) : Fragment() {
                 val gson = Gson()
                 val androidResult = gson.fromJson<AndroidResult>(result, object : TypeToken<AndroidResult>() {}.type)
                 ThreadUtil.runOnMainThread(Runnable {
-                    androidResult.results?.let { adapter.loadMore(it) }
-                    //Toast.makeText(context,"加载数据成功",Toast.LENGTH_LONG).show()
+                    if (androidResult.count != 0)
+                        androidResult.results?.let { adapter.loadMore(it) }
+                    else {
+                        more_progressbar.isGone = true
+                        Toast.makeText(context, "已加载全部结果", Toast.LENGTH_SHORT).show()
+                    }
                 })
             }
 
             override fun onFailure(call: Call, e: IOException) {
-                ThreadUtil.runOnMainThread(Runnable { Toast.makeText(context,"加载数据失败:网络连接失败$e",Toast.LENGTH_LONG).show() })
+                ThreadUtil.runOnMainThread(Runnable {
+                    Toast.makeText(context, "加载数据失败:网络连接失败$e", Toast.LENGTH_LONG).show()
+                })
             }
         })
     }

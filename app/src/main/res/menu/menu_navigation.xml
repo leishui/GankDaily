@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright 2018 Google LLC
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     https://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+            android:id="@+id/android_fragment"
+            android:icon="@drawable/ic_android"
+            android:title="Android"/>
+    <item
+            android:id="@+id/ios_fragment"
+            android:icon="@drawable/ic_ios"
+            android:title="iOS"/>
+    <item
+            android:id="@+id/welfare_fragment"
+            android:icon="@drawable/ic_welfare"
+            android:title="福利"/>
+    <item
+            android:id="@+id/web_front_fragment"
+            android:icon="@drawable/ic_web_front_end"
+            android:title="Web前端"/>
+    <item
+            android:id="@+id/expanding_resources_fragment"
+            android:icon="@drawable/ic_expanding_resources"
+            android:title="拓展资源"/>
+    <item
+            android:id="@+id/recommend_fragment"
+            android:icon="@drawable/ic_recommend"
+            android:title="瞎推荐"/>
+    <item
+            android:id="@+id/app_fragment"
+            android:icon="@drawable/ic_app"
+            android:title="APP"/>
+    <item
+            android:id="@+id/all_fragment"
+            android:icon="@drawable/ic_all"
+            android:title="ALL"/>
+    <item
+            android:id="@+id/video_fragment"
+            android:icon="@drawable/ic_video"
+            android:title="休息视频"/>
+
+</menu>

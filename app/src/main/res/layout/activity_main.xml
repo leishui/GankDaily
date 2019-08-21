@@ -1,29 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<layout
         xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-    <androidx.appcompat.widget.Toolbar
-            app:title="干货集中营"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.drawerlayout.widget.DrawerLayout
+            android:id="@+id/drawer_layout"
             android:layout_width="match_parent"
-            android:layout_height="?actionBarSize"/>
+            android:layout_height="match_parent"
+            android:fitsSystemWindows="true">
 
-    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#BEBEBE"/>
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-    <androidx.fragment.app.FragmentTabHost
-            android:id="@+id/container"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"/>
+            <com.google.android.material.appbar.AppBarLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
-    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#BEBEBE"/>
+                <androidx.appcompat.widget.Toolbar
+                        android:id="@+id/toolbar"
+                        app:layout_scrollFlags="scroll|enterAlways|snap"
+                        android:layout_width="match_parent"
+                        android:layout_height="?actionBarSize"
+                        app:contentInsetStartWithNavigation="0dp">
+                    <TextView
+                            android:id="@+id/main_title"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="Android"
+                            android:textSize="25sp"/>
+                </androidx.appcompat.widget.Toolbar>
 
-    <com.roughike.bottombar.BottomBar
-            android:id="@+id/bottombar"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            app:bb_tabXmlResource="@xml/bottombar_tabs"/>
+            </com.google.android.material.appbar.AppBarLayout>
 
-</LinearLayout>
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
+                    android:id="@+id/fragment">
+
+                <com.google.android.material.tabs.TabLayout
+                        android:id="@+id/tabLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+
+                <androidx.viewpager.widget.ViewPager
+                        android:id="@+id/viewPage"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"/>
+            </LinearLayout>
+
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+        <com.google.android.material.navigation.NavigationView
+                android:id="@+id/navigation_view"
+                style="@style/Widget.MaterialComponents.NavigationView"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="start"
+                app:headerLayout="@layout/nav_header"
+                app:menu="@menu/menu_navigation"/>
+
+    </androidx.drawerlayout.widget.DrawerLayout>
+
+</layout>
