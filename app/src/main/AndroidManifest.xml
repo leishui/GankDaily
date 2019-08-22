@@ -12,11 +12,11 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme"
             android:usesCleartextTraffic="true">
-        <activity android:name=".SearchActivity">
+        <activity android:name=".Activity.SearchActivity">
         </activity>
-        <activity android:name=".DisplayActivity">
+        <activity android:name=".Activity.DisplayActivity">
         </activity>
-        <activity android:name=".MainActivity">
+        <activity android:name=".Activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 

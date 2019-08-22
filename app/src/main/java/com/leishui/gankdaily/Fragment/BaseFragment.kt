@@ -17,7 +17,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.leishui.gankdaily.Adapter.BaseAdapter
-import com.leishui.gankdaily.DisplayActivity
+import com.leishui.gankdaily.Activity.DisplayActivity
 import com.leishui.gankdaily.R
 import com.leishui.gankdaily.ResultBean.AndroidResult
 import com.leishui.gankdaily.Util.ThreadUtil
@@ -44,7 +44,6 @@ open class BaseFragment(var type: String, var isNew: Boolean) : Fragment() {
         swipeRefreshLayout.setOnRefreshListener { initData(query) }
         recyclerview.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                //if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                 val layoutManager = recyclerView.layoutManager
                 if (layoutManager is LinearLayoutManager) {
                     val manager = layoutManager
@@ -52,7 +51,6 @@ open class BaseFragment(var type: String, var isNew: Boolean) : Fragment() {
                     if (lastPosition == adapter.itemCount - 1)
                         loadMore(query)
                 }
-                //}
             }
         })
         //item点击事件
@@ -88,6 +86,8 @@ open class BaseFragment(var type: String, var isNew: Boolean) : Fragment() {
         val client = OkHttpClient()
         val url = UrlUtil.getPath(type, isNew, num, 1, query)
         val request = Request.Builder().url(url).get().build()
+        page = 1
+        more_progressbar?.isGone = false
         client.newCall(request).enqueue(object : Callback {
             override fun onResponse(call: Call, response: Response) {
                 val result = response.body?.string()
@@ -95,19 +95,20 @@ open class BaseFragment(var type: String, var isNew: Boolean) : Fragment() {
                 val searchResult = gson.fromJson<AndroidResult>(result, object : TypeToken<AndroidResult>() {}.type)
                 ThreadUtil.runOnMainThread(Runnable {
                     //searchResult.results?.let { adapter.updateList(it) }
-                    recyclerview.scrollToPosition(0)
+                    recyclerview?.scrollToPosition(0)
                     searchResult.results?.let { adapter.updateList(it) }
                     if (searchResult.count != num && searchResult.count != null) {
                         more_progressbar?.isGone = true
                         if (searchResult.count == 0)
-                            Toast.makeText(context, "无结果", Toast.LENGTH_SHORT).show()
+                            context?.let { Toast.makeText(it, "无结果", Toast.LENGTH_SHORT).show() }
                         else
-                            Toast.makeText(context, "获取数据成功", Toast.LENGTH_SHORT).show()
+                            context?.let { Toast.makeText(it, "获取数据成功", Toast.LENGTH_SHORT).show() }
                         //Toast.makeText(context, "已加载全部结果", Toast.LENGTH_SHORT).show()
                     } else
-                        Toast.makeText(context, "获取数据成功", Toast.LENGTH_SHORT).show()
+                        context?.let { Toast.makeText(it, "获取数据成功", Toast.LENGTH_SHORT).show() }
+                        //Toast.makeText(context, "获取数据成功", Toast.LENGTH_SHORT).show()
+                    swipeRefreshLayout.isRefreshing = false
                 })
-                swipeRefreshLayout.isRefreshing = false
             }
 
             override fun onFailure(call: Call, e: IOException) {
@@ -133,7 +134,7 @@ open class BaseFragment(var type: String, var isNew: Boolean) : Fragment() {
                     if (androidResult.count != 0)
                         androidResult.results?.let { adapter.loadMore(it) }
                     else {
-                        more_progressbar.isGone = true
+                        more_progressbar?.isGone = true
                         Toast.makeText(context, "已加载全部结果", Toast.LENGTH_SHORT).show()
                     }
                 })
