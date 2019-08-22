@@ -1,4 +1,4 @@
-package com.leishui.gankdaily.Fragment
+package com.leishui.gankdaily.fragment
 
 
 import android.os.Bundle

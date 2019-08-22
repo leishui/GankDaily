@@ -16,7 +16,7 @@
         </androidx.appcompat.widget.Toolbar>
         <fragment
                 android:id="@+id/result_fragment"
-                android:name="com.leishui.gankdaily.Fragment.BlankFragment"
+                android:name="com.leishui.gankdaily.fragment.BlankFragment"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
 

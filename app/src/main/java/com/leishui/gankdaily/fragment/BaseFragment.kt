@@ -1,4 +1,4 @@
-package com.leishui.gankdaily.Fragment
+package com.leishui.gankdaily.fragment
 
 import android.content.ClipData
 import android.content.ClipboardManager
@@ -16,12 +16,12 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.leishui.gankdaily.Adapter.BaseAdapter
-import com.leishui.gankdaily.Activity.DisplayActivity
+import com.leishui.gankdaily.adapter.BaseAdapter
+import com.leishui.gankdaily.activity.DisplayActivity
 import com.leishui.gankdaily.R
-import com.leishui.gankdaily.ResultBean.AndroidResult
-import com.leishui.gankdaily.Util.ThreadUtil
-import com.leishui.gankdaily.Util.UrlUtil
+import com.leishui.gankdaily.resultBean.AndroidResult
+import com.leishui.gankdaily.util.ThreadUtil
+import com.leishui.gankdaily.util.UrlUtil
 import kotlinx.android.synthetic.main.fragment.*
 import kotlinx.android.synthetic.main.load_more.*
 import okhttp3.*

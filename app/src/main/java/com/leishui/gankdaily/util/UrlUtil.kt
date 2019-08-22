@@ -1,4 +1,4 @@
-package com.leishui.gankdaily.Util
+package com.leishui.gankdaily.util
 
 object UrlUtil {
 

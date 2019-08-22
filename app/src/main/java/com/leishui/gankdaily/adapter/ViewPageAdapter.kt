@@ -1,10 +1,9 @@
-package com.leishui.gankdaily.Adapter
+package com.leishui.gankdaily.adapter
 
 import android.content.Context
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
-import androidx.viewpager.widget.PagerAdapter
 import com.leishui.gankdaily.R
 
 class ViewPageAdapter(private var context: Context,fm: FragmentManager, private val fragmentT: Fragment,private val fragmentF: Fragment) : FragmentPagerAdapter(

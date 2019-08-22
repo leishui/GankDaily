@@ -1,4 +1,4 @@
-package com.leishui.gankdaily.ResultBean
+package com.leishui.gankdaily.resultBean
 
 class AndroidResult {
     //var isError: Boolean ?= null
